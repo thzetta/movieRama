@@ -1,4 +1,5 @@
 package com.workable.movierama.model;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -6,14 +7,21 @@ import org.springframework.cache.annotation.Cacheable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Cacheable(value = "movie")
 public class Movie {
+	
+	private String id;
 	private String title;
 	private int year;
 	private String overview;
-	private List<String> actors;
+	private List<String> actors = new ArrayList<String>();
 	private int reviews;
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getTitle() {
 		return title;
 	}

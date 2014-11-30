@@ -7,6 +7,7 @@
 
 <html>
 <head>
+<link href="<c:url value="/resources/css/home.css" />" rel="stylesheet">
 	<title>MovieRama</title>
 </head>
 <body>
@@ -21,9 +22,13 @@
 </form:form>
 
 <c:forEach var="movie" items="${movies}">
-<div>
+<div class="box">
 <P> ${movie.year}  -  ${movie.title}. </P>
+<c:forEach var="actor" items="${movie.actors}">
+${actor},
+</c:forEach>
 <p> ${movie.overview}. </p>
+<p> ${movie.reviews } </p>
 </div>
 </c:forEach>
 </body>
