@@ -7,4 +7,6 @@ import com.workable.movierama.model.Movie;
 public interface MovieService {
 
 	List<Movie> findAllInTheaters();
+
+	List<Movie> search(String query);
 }

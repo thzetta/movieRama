@@ -124,10 +124,20 @@
 		<dependency>
     		<groupId>org.json</groupId>
     		<artifactId>json</artifactId>
-   		 	<version>20141113</version>
+   		 	<version>20140107</version>
 		</dependency>   
 	</dependencies>
-    <build>
+    <build> 
+    <!--  
+   		<pluginManagement>
+   			<plugins>
+ 				 <plugin>
+      				<groupId>org.apache.tomcat.maven</groupId>
+       				<artifactId>tomcat7-maven-plugin</artifactId>
+       				<version>2.1</version>
+       			</plugin>
+   			</plugins>
+   		</pluginManagement> -->
         <plugins>
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
