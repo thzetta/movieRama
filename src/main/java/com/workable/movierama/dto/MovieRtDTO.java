@@ -1,14 +1,22 @@
-package com.workable.movierama.model;
+package com.workable.movierama.dto;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.workable.movierama.model.Cast;
 
-public class Movie {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class MovieRtDTO {
 	
 	private String id;
 	private String title;
 	private int year;
+	@JsonProperty("synopsis")
 	private String overview;
+	@JsonProperty("abridged_cast")
 	private List<Cast> cast;
 	private int reviews;
 	

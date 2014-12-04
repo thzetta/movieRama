@@ -1,5 +1,6 @@
 package com.workable.movierama.utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.workable.movierama.dto.MovieTmdbDTO;
+import com.workable.movierama.dto.MovieTmdbListDTO;
 import com.workable.movierama.model.Movie;
 
 public class TmdbJsonWrapper{
@@ -22,7 +29,33 @@ public class TmdbJsonWrapper{
 		ArrayList<Movie> movies = new ArrayList<Movie>();
 		try{
 		String result = restTemplate.getForObject(query, String.class);
-		JSONObject jsonObject = new JSONObject(result);
+		ObjectMapper mapper = new ObjectMapper();
+		MovieTmdbListDTO movieList=new MovieTmdbListDTO();
+		try {
+			movieList = mapper.readValue(result, MovieTmdbListDTO.class);
+				for (MovieTmdbDTO movie : movieList.getMovies()){
+					String tmdb_movie = Url.TMDB_MOVIE.replace("{id}", movie.getId());
+					String movieString = restTemplate.getForObject(tmdb_movie, String.class);		
+					
+					MovieTmdbDTO movieDTO = mapper.readValue(movieString, MovieTmdbDTO.class);
+					movies.add(constructMovie(movieDTO));
+				}				
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}catch (HttpClientErrorException ex){
+			logger.warn("rest call failed");
+		}
+		return movies;
+		
+	/*	JSONObject jsonObject = new JSONObject(result);
 		JSONArray array = (JSONArray)jsonObject.get("results");
 
 		for (int i=0; i< array.length(); i++){
@@ -41,25 +74,22 @@ public class TmdbJsonWrapper{
 		}catch(HttpClientErrorException ex){
 			logger.info("Rest call failed");
 		}
-		return movies;
+		
+		*/
+		
 	}
 	
+
 	
-	private Movie appendMovieInfo(Movie movie){
-		RestTemplate restTemplate = new RestTemplate();
-		String tmdb_movie = Url.TMDB_MOVIE.replace("{id}", movie.getId());
-		String movieString = restTemplate.getForObject(tmdb_movie, String.class);		
-		JSONObject movieObject = new JSONObject(movieString);
-		movie.setOverview(movieObject.getString("overview"));
-		JSONObject reviewsObject = (JSONObject) movieObject.get("reviews");
-		movie.setReviews(reviewsObject.getInt("total_results"));
-		JSONObject creditsObject = (JSONObject) movieObject.get("credits");
-		JSONArray castArray = (JSONArray)creditsObject.get("cast");
-		for (int j=0; j < 5; j++){
-			movie.getActors().add(castArray.getJSONObject(j).getString("name"));
-		}
+	private Movie constructMovie(MovieTmdbDTO movieDTO){
+		Movie movie = new Movie();
+		movie.setId(movieDTO.getId());
+		movie.setOverview(movieDTO.getOverview());
+		movie.setReviews(movieDTO.getReviews().getTotalResults());
+		movie.setCast(movieDTO.getCredits().getCast());
+		movie.setYear(Utils.getYear(movieDTO.getReleaseDate()));
+		movie.setTitle(movieDTO.getTitle());
 		return movie;
-		
 	}
 	
 }

@@ -1,6 +1,8 @@
 package com.workable.movierama.utils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -12,6 +14,12 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.workable.movierama.dto.MovieRtDTO;
+import com.workable.movierama.dto.MovieRtListDTO;
+import com.workable.movierama.dto.MovieTmdbDTO;
 import com.workable.movierama.model.Movie;
 
 public class RtJsonWrapper {
@@ -19,10 +27,37 @@ public class RtJsonWrapper {
 
 	public List<Movie> parseRottenTomatoes(String query){
 		RestTemplate restTemplate = new RestTemplate();
-
+		ArrayList<Movie> movies = new ArrayList<Movie>();
 		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 		String result = restTemplate.getForObject(query, String.class);
-		JSONObject jsonObject = new JSONObject(result);
+		ObjectMapper mapper = new ObjectMapper();
+		MovieRtListDTO movieList = null;
+		try {
+			 movieList = mapper.readValue(result, MovieRtListDTO.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for ( MovieRtDTO movieDTO : movieList.getMovies()){
+			try{
+				String reviews = Url.RT_REVIEWS.replace("{id}", movieDTO.getId());
+				String res = restTemplate.getForObject(reviews, String.class);
+				JSONObject obj = new JSONObject(res);
+				movieDTO.setReviews(obj.getInt("total"));
+			}catch(HttpClientErrorException ex){
+				logger.info("Rest call denied");
+			}
+			
+			movies.add(constructMovie(movieDTO));
+		}
+	/*	JSONObject jsonObject = new JSONObject(result);
 		JSONArray array = (JSONArray)jsonObject.get("movies");
 		ArrayList<Movie> movies = new ArrayList<Movie>();
 		
@@ -39,27 +74,22 @@ public class RtJsonWrapper {
 				}
 				movies.add(movie);
 			}catch(JSONException ex){logger.info("Parsing failed");};
-	}
+	}*/
 		
-		return appendReviews(movies);
-		
+		return movies;
 		
 	}
 
+
 	
-	private List<Movie> appendReviews(List<Movie> movies){
-		RestTemplate restTemplate = new RestTemplate();
-		for (int i =0; i<movies.size(); i++){
-			try{
-				String reviews = Url.RT_REVIEWS.replace("{id}", movies.get(i).getId());
-				String res = restTemplate.getForObject(reviews, String.class);
-				JSONObject obj = new JSONObject(res);
-				movies.get(i).setReviews(obj.getInt("total"));
-			}catch(HttpClientErrorException ex){
-				logger.info("Rest call denied");
-			}
-	
-		}
-		return movies;
+	private Movie constructMovie(MovieRtDTO movieDTO){
+		Movie movie = new Movie();
+		movie.setId(movieDTO.getId());
+		movie.setOverview(movieDTO.getOverview());
+		movie.setReviews(movieDTO.getReviews());
+		movie.setCast(movieDTO.getCast());
+		movie.setYear(movieDTO.getYear());
+		movie.setTitle(movieDTO.getTitle());
+		return movie;
 	}
 }

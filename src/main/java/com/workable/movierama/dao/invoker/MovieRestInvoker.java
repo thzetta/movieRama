@@ -45,14 +45,16 @@ public class MovieRestInvoker implements MovieDao{
 			mergedMovies.put(movie.getTitle()+movie.getYear(), movie);
 		}
 		for (int i=0; i<tmdbMovies.size(); i++){
-			Movie movie = mergedMovies.get(tmdbMovies.get(i).getTitle());
+			String key = tmdbMovies.get(i).getTitle()+tmdbMovies.get(i).getYear();
+
+			Movie movie = mergedMovies.get(key);
 			if(movie == null){
-				mergedMovies.put(tmdbMovies.get(i).getTitle()+tmdbMovies.get(i).getYear(), tmdbMovies.get(i));
+				mergedMovies.put(key, tmdbMovies.get(i));
 			}else{
-				int reviews = mergedMovies.get(tmdbMovies.get(i).getTitle()).getReviews() + tmdbMovies.get(i).getReviews();
-				mergedMovies.get(tmdbMovies.get(i).getTitle()).setReviews(reviews);
-				if (tmdbMovies.get(i).getOverview().length() >  mergedMovies.get(tmdbMovies.get(i).getTitle()).getOverview().length()){
-					mergedMovies.get(tmdbMovies.get(i).getTitle()).setOverview(tmdbMovies.get(i).getOverview());
+				int reviews = mergedMovies.get(key).getReviews() + tmdbMovies.get(i).getReviews();
+				mergedMovies.get(key).setReviews(reviews);
+				if (tmdbMovies.get(i).getOverview().length() >  mergedMovies.get(key).getOverview().length()){
+					mergedMovies.get(key).setOverview(tmdbMovies.get(i).getOverview());
 				}
 			}
 			

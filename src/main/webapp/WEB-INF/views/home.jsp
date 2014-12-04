@@ -24,8 +24,8 @@
 <c:forEach var="movie" items="${movies}">
 <div class="box">
 <P> ${movie.year}  -  ${movie.title}. </P>
-<c:forEach var="actor" items="${movie.actors}">
-${actor},
+<c:forEach var="actor" items="${movie.cast}">
+${actor.name},
 </c:forEach>
 <p> ${movie.overview}. </p>
 <p> ${movie.reviews } </p>
