@@ -11,6 +11,13 @@ This README would normally document whatever steps are necessary to get your app
 ### How do I get set up? ###
 
 * Summary of set up
+
+The application has been built with:
+Spring framework 3.1.2
+Spring Tool Suite IDE 3.6.3
+Maven 3.2.3
+Apache Tomcat Maven Plugin
+
 To build the application you need to have Maven installed. You can download Maven 3.2.3 from http://maven.apache.org/ and follow the instructions to set it up.
 
 Once maven is configured, you can cd in the project's folder MovieRama in the command line and execute: mvn clean install tomcat7:run
