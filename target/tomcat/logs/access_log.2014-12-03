@@ -1,2 +1,0 @@
-0:0:0:0:0:0:0:1 - - [03/Dec/2014:16:42:20 +0000] "GET /eriskwellbeing/ HTTP/1.1" 404 - http-bio-8080-exec-1 0
-0:0:0:0:0:0:0:1 - - [03/Dec/2014:16:42:35 +0000] "GET /movierama/ HTTP/1.1" 200 15526 http-bio-8080-exec-3 10076

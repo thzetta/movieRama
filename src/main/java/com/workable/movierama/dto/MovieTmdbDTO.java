@@ -1,13 +1,9 @@
 package com.workable.movierama.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.workable.movierama.model.Credits;
 
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,7 +15,7 @@ public class MovieTmdbDTO {
 	@JsonProperty("release_date")
 	private String releaseDate;
 	private String overview;
-	private Credits credits;
+	private CreditsDTO credits;
 	private ReviewsDTO reviews;
 	public String getId() {
 		return id;
@@ -33,10 +29,10 @@ public class MovieTmdbDTO {
 	public void setOverview(String overview) {
 		this.overview = overview;
 	}
-	public Credits getCredits() {
+	public CreditsDTO getCredits() {
 		return credits;
 	}
-	public void setCredits(Credits credits) {
+	public void setCredits(CreditsDTO credits) {
 		this.credits = credits;
 	}
 	public ReviewsDTO getReviews() {

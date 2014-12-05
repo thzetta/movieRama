@@ -1,8 +1,6 @@
 package com.workable.movierama.model;
 import java.util.List;
 
-
-
 public class Movie {
 	
 	private String id;

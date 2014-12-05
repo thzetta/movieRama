@@ -1,13 +1,12 @@
 package com.workable.movierama.dto;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.cache.annotation.Cacheable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.workable.movierama.model.Cast;
 
+@JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieRtDTO {
 	
@@ -18,7 +17,7 @@ public class MovieRtDTO {
 	private String overview;
 	@JsonProperty("abridged_cast")
 	private List<Cast> cast;
-	private int reviews;
+	private ReviewsDTO reviews;
 	
 	public String getId() {
 		return id;
@@ -44,17 +43,18 @@ public class MovieRtDTO {
 	public void setOverview(String overview) {
 		this.overview = overview;
 	}
-	public int getReviews() {
-		return reviews;
-	}
-	public void setReviews(int reviews) {
-		this.reviews = reviews;
-	}
+
 	public List<Cast> getCast() {
 		return cast;
 	}
 	public void setCast(List<Cast> cast) {
 		this.cast = cast;
+	}
+	public ReviewsDTO getReviews() {
+		return reviews;
+	}
+	public void setReviews(ReviewsDTO reviews) {
+		this.reviews = reviews;
 	}
 
 }

@@ -16,19 +16,25 @@
 </h1>
 
 <form:form action="search" method="get">
-  Search:
-  <input type="text" name="query" />
-  <input type="submit"/>
+
+ <span> <input type="search"  class="search rounded" placeholder="Search..." name="query" /></span>
 </form:form>
 
+<c:if test="${ not empty totalMovies }">
+	<p class="totalMovies">${totalMovies } movies in theaters this week </p>
+</c:if>
 <c:forEach var="movie" items="${movies}">
 <div class="box">
-<P> ${movie.year}  -  ${movie.title}. </P>
-<c:forEach var="actor" items="${movie.cast}">
-${actor.name},
-</c:forEach>
-<p> ${movie.overview}. </p>
-<p> ${movie.reviews } </p>
+	<h2> ${movie.title}</h2>
+	<p class="actors"> ${movie.year} 
+	<c:if test="${not empty movie.cast }">-</c:if>
+	<c:forEach var="actor" items="${movie.cast}" varStatus="i">
+		${actor.name}
+		<c:if test="${not i.last}">,</c:if>
+	</c:forEach>
+	</p>
+	<p> ${movie.overview} </p>
+	<p><span class="reviews"> ${movie.reviews} Reviews</span></p>
 </div>
 </c:forEach>
 </body>

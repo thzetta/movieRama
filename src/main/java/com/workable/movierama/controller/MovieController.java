@@ -28,15 +28,22 @@ public class MovieController {
 	MovieService movieService;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String findAll( Model model) {
 		List<Movie> movies = movieService.findAllInTheaters();
 		model.addAttribute("movies", movies);	
+		model.addAttribute("totalMovies", movies.size());
 		return "home";
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(@RequestParam("query")String query, Locale locale, Model model) {
-		List<Movie> movies = movieService.search(query);
+	public String search(@RequestParam("query")String query, Model model) {
+		List<Movie> movies;
+		if (query.isEmpty()){
+			 movies = movieService.findAllInTheaters();
+			 model.addAttribute("totalMovies", movies.size());
+		}else{
+			 movies = movieService.search(query);
+		}		
 		model.addAttribute("movies", movies);	
 		return "home";
 	}
