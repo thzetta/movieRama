@@ -10,6 +10,14 @@ public class Movie {
 	private List<Cast> cast;
 	private int reviews;
 	
+	public Movie(){
+		this.id="Not found";
+		this.title="Not found";
+		this.year=0;
+		this.overview="Not found";
+		this.reviews=0;		
+	}
+	
 	public String getId() {
 		return id;
 	}
